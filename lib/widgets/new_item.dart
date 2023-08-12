@@ -28,7 +28,10 @@ class _NewItemState extends State<NewItem> {
                   labelText: 'Name',
                 ),
                 validator: (value) {
-                  return 'Demo...';
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a name';
+                  }
+                  return null;
                 },
               ),
               Row(
