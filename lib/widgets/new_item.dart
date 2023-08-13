@@ -44,7 +44,6 @@ class _NewItemState extends State<NewItem> {
           child: Column(
             children: [
               TextFormField(
-                autocorrect: true,
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
@@ -99,9 +98,11 @@ class _NewItemState extends State<NewItem> {
                           )
                       ],
                       onChanged: (value) {
-                        setState(() {
-                          selectedCategory = value!;
-                        });
+                        setState(
+                          () {
+                            selectedCategory = value!;
+                          },
+                        );
                       },
                     ),
                   ),
@@ -114,7 +115,9 @@ class _NewItemState extends State<NewItem> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: _formKey.currentState!.reset,
+                    onPressed: () {
+                      _formKey.currentState!.reset;
+                    },
                     child: const Text('Reset'),
                   ),
                   ElevatedButton(
@@ -125,7 +128,7 @@ class _NewItemState extends State<NewItem> {
                     ),
                   )
                 ],
-              )
+              ),
             ],
           ),
         ),

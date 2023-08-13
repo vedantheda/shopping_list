@@ -15,14 +15,24 @@ class _GroceryListState extends State<GroceryList> {
   void _addItem() async {
     final newItem = await Navigator.of(context).push<GroceryItem>(
       MaterialPageRoute(
-        builder: (context) => const NewItem(),
+        builder: (ctx) => const NewItem(),
       ),
     );
 
     if (newItem == null) {
       return;
     }
-    groceryItems.add(newItem);
+    setState(
+      () {
+        groceryItems.add(newItem);
+      },
+    );
+  }
+
+  _removeItem(GroceryItem item) {
+    setState(() {
+      groceryItems.remove(item);
+    });
   }
 
   @override
@@ -37,23 +47,39 @@ class _GroceryListState extends State<GroceryList> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: groceryItems.length,
-        itemBuilder: (ctx, index) {
-          return ListTile(
-            leading: Container(
-              height: 24,
-              width: 24,
-              color: groceryItems[index].category.color,
+      body: groceryItems.isEmpty
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No items yet!',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: groceryItems.length,
+              itemBuilder: (ctx, index) {
+                return Dismissible(
+                  onDismissed: (direction) => _removeItem(groceryItems[index]),
+                  key: ValueKey(groceryItems[index].id),
+                  child: ListTile(
+                    leading: Container(
+                      height: 24,
+                      width: 24,
+                      color: groceryItems[index].category.color,
+                    ),
+                    title: Text(groceryItems[index].name),
+                    subtitle: Text(
+                      groceryItems[index].category.name,
+                    ),
+                    trailing: Text(groceryItems[index].quantity.toString()),
+                  ),
+                );
+              },
             ),
-            title: Text(groceryItems[index].name),
-            subtitle: Text(
-              groceryItems[index].category.name,
-            ),
-            trailing: Text(groceryItems[index].quantity.toString()),
-          );
-        },
-      ),
     );
   }
 }
